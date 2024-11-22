@@ -1,0 +1,15 @@
+compatibility_date = "2024-11-12"
+main = "src/index.ts"
+minify = true
+name = "scheduled"
+upload_source_maps = true
+
+[observability]
+enabled = true
+
+[triggers]
+crons = ["0 0 * * *"]
+
+[[kv_namespaces]]
+binding = "scheduled"
+id = "108f5ad70b754cad9c0fb30000eff5cd"
