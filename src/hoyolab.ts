@@ -22,7 +22,7 @@ function parseSignCookies(rawCookies: string): signCookies {
 }
 
 async function sign(cookie: signCookies) {
-    const response = await fetch('https://sg-hk4e-api.hoyolab.com/event/sol/sign', {
+    const response = await fetch('https://sg-hk4e-api.hoyolab.com/event/sol/sign?lang=zh-cn', {
         method: 'POST',
         body: JSON.stringify({ act_id: 'e202102251931481' }),
         headers: { Cookie: printCookies(cookie) }
@@ -31,7 +31,7 @@ async function sign(cookie: signCookies) {
 }
 
 async function isSigned(cookie: signCookies): Promise<signstatus> {
-    const response = await fetch('https://sg-hk4e-api.hoyolab.com/event/sol/info?act_id=e202102251931481', {
+    const response = await fetch('https://sg-hk4e-api.hoyolab.com/event/sol/info?lang=zh-cn&act_id=e202102251931481', {
         method: 'GET',
         headers: { Cookie: printCookies(cookie) }
     })
