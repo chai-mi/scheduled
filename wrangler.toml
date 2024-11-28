@@ -8,8 +8,18 @@ upload_source_maps = true
 enabled = true
 
 [triggers]
-crons = ["0 0 * * *"]
+crons = ["0 0 * * *", "0 7/8 * * *"]
 
 [[kv_namespaces]]
 binding = "scheduled"
 id = "108f5ad70b754cad9c0fb30000eff5cd"
+
+[[services]]
+binding = "bot"
+entrypoint = "Telegram"
+service = "scheduled"
+
+[[d1_databases]]
+binding = "elec"
+database_id = "3bed700c-70ed-42c2-8fab-6f4207e80314"
+database_name = "elec"
