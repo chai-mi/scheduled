@@ -16,7 +16,7 @@ export default class Bot {
     addCommand = (
         setCommand: string,
         description: string,
-        func: (env: Env, update: Update.MessageUpdate, ctx: string) => Promise<void>
+        func: (env: Env, update: Update.MessageUpdate, ctx: string) => Promise<any>
     ): void => {
         this.commands.push({ command: setCommand, description })
         this.on('message', async (env: Env, update: Update.MessageUpdate) => {
