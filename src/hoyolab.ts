@@ -58,7 +58,7 @@ type signstatus = {
     data: null,
 }
 
-async function signAction(cookie: signCookies) {
+export async function signAction(cookie: signCookies) {
     const signstatus = await isSigned(cookie)
     console.log({ cookie, signstatus })
     if (signstatus.retcode === 0 && signstatus.data.is_sign === false) {
