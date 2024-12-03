@@ -1,5 +1,3 @@
-import Env from "../worker-configuration"
-
 type cookies = { [key: string]: string }
 
 function printCookies(c: cookies) {

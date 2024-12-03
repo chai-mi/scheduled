@@ -1,7 +1,5 @@
 import { Update, BotCommand } from "@telegraf/types"
 
-import Env from "../worker-configuration"
-
 type ExecFunc<U extends Update = Update> = (env: Env, update: U) => Promise<void>
 
 export default class Bot {

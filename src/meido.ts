@@ -1,7 +1,7 @@
 import { Update } from "@telegraf/types"
 
-import Env from "../worker-configuration"
 import Bot from "./telegram"
+import { CallAPI } from "./rpc"
 
 export const meido = new Bot('chaiminomeido_bot', 7125535635)
 meido.addCommand('checkelec', '查询电费', CheckElec)
@@ -17,21 +17,22 @@ interface User {
 }
 
 async function CheckElec(env: Env, update: Update.MessageUpdate) {
-    env.bot.meido('sendChatAction', {
+    const meido = CallAPI(env.meido)
+    meido('sendChatAction', {
         chat_id: update.message.chat.id,
         action: 'typing'
     })
 
     const user = await env.elec.prepare('SELECT * from user WHERE user_id = ?1 LIMIT 1').bind(update.message.from.id).first<User>()
     if (user === null) {
-        return env.bot.meido('sendMessage', {
+        return meido('sendMessage', {
             chat_id: update.message.chat.id,
             text: '未登录！点击进行登录',
             reply_markup: { inline_keyboard: [[{ text: "登录", url: `https://t.me/chaiminomeido_bot?start=loginecust` }]] },
             reply_parameters: { message_id: update.message.message_id }
         })
     } else if (user.err === 1) {
-        return env.bot.meido('sendMessage', {
+        return meido('sendMessage', {
             chat_id: update.message.chat.id,
             text: `请检查账号密码及房间号并重新输入\n账号: ${user.username}\n密码: ${user.password}\n房间号: ${user.room_id}`,
             entities: [{
@@ -67,7 +68,7 @@ async function CheckElec(env: Env, update: Update.MessageUpdate) {
 
     if (elec === undefined) {
         await env.elec.prepare('UPDATE user SET err = ?2 WHERE user_id = ?1').bind(user.user_id, 1).run()
-        return env.bot.meido('sendMessage', {
+        return meido('sendMessage', {
             chat_id: update.message.from.id,
             text: `查询失败，请检查账号密码及房间号并重新输入\n账号: ${user.username}\n密码: ${user.password}\n房间号: ${user.room_id}`,
             entities: [{
@@ -79,7 +80,7 @@ async function CheckElec(env: Env, update: Update.MessageUpdate) {
         })
     }
 
-    return env.bot.meido('sendMessage', {
+    return meido('sendMessage', {
         chat_id: update.message.chat.id,
         text: `${user.room_id} 电量剩余 ${elec} 度`,
         reply_parameters: { message_id: update.message.message_id }
@@ -87,6 +88,7 @@ async function CheckElec(env: Env, update: Update.MessageUpdate) {
 }
 
 async function work(env: Env, user: User) {
+    const meido = CallAPI(env.meido)
     const elec = await async function () {
         try {
             const jsessionid = await getJsessionid(user.cookies)
@@ -113,7 +115,7 @@ async function work(env: Env, user: User) {
         await env.elec.prepare('UPDATE user SET err = ?2 WHERE user_id = ?1')
             .bind(user.user_id, 1)
             .run()
-        return env.bot.meido('sendMessage', {
+        return meido('sendMessage', {
             chat_id: user.user_id,
             text: `定时查询任务\n查询失败，请检查账号密码及房间号并重新输入\n账号: ${user.username}\n密码: ${user.password}\n房间号: ${user.room_id}`,
             entities: [{
@@ -129,7 +131,7 @@ async function work(env: Env, user: User) {
     }
 
     if (elec < user.threshold) {
-        return env.bot.meido('sendMessage', {
+        return meido('sendMessage', {
             chat_id: user.user_id,
             text: `定时查询任务\n${user.room_id} 电量剩余 ${elec} 度`,
             entities: [{

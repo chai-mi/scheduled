@@ -1,6 +1,3 @@
-export { Telegram } from "./rpc"
-
-import Env from "../worker-configuration"
 import { Hoyolab } from "./hoyolab"
 import { CronCheckElec, meido } from "./meido"
 
