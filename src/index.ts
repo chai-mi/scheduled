@@ -1,5 +1,6 @@
 import { Hoyolab } from "./hoyolab"
 import { CronCheckElec, meido } from "./meido"
+import { DeleteOldDeployments } from "./pages"
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -15,6 +16,7 @@ export default {
 			case '0 0 * * *':
 				return await Promise.all([
 					Hoyolab(env, ctx),
+					DeleteOldDeployments(env),
 				])
 			case '0 7/8 * * *':
 				return await CronCheckElec(env)

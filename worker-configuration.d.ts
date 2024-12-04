@@ -4,5 +4,8 @@ interface Env {
 	scheduled: KVNamespace;
 	meido: string;
 	meidopath: string;
+	API_TOKEN: string;
+	account_id: string;
+	project_name: string;
 	elec: D1Database;
 }
