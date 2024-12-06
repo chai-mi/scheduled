@@ -16,7 +16,7 @@ export default {
 			case '0 0 * * *':
 				return await Promise.all([
 					Hoyolab(env, ctx),
-					DeleteOldDeployments(env),
+					// DeleteOldDeployments(env),
 				])
 			case '0 7/8 * * *':
 				return await CronCheckElec(env)
