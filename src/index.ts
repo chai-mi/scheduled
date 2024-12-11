@@ -14,12 +14,12 @@ export default {
 	async scheduled(event: ScheduledController, env: Env, ctx: ExecutionContext) {
 		switch (event.cron) {
 			case '0 0 * * *':
-				return await Promise.all([
-					Hoyolab(env, ctx),
-					DeleteOldDeployments(env),
-				])
+				ctx.waitUntil(Hoyolab(env, ctx))
+				ctx.waitUntil(DeleteOldDeployments(env))
+				return
 			case '0 7/8 * * *':
-				return await CronCheckElec(env)
+				await CronCheckElec(env)
+				return
 			default:
 				// 测试用，例：
 				// await Hoyolab(env, ctx)

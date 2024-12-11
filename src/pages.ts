@@ -1,25 +1,29 @@
 export async function DeleteOldDeployments(env: Env) {
-    const endpoint = `https://api.cloudflare.com/client/v4/accounts/${env.account_id}/pages/projects/${env.project_name}/deployments`
+    await action(env.account_id, env.project_name, env.API_TOKEN, env.email)
+}
+
+export async function action(account_id: string, project_name: string, API_TOKEN: string, email: string) {
+    const endpoint = `https://api.cloudflare.com/client/v4/accounts/${account_id}/pages/projects/${project_name}/deployments`
     const expirationDays = 7
-    const init = {
-        headers: {
-            "Content-Type": "application/json;charset=UTF-8",
-            "Authorization": `Bearer ${env.API_TOKEN}`,
-        },
+    const headers = {
+        "Content-Type": "application/json",
+        "X-Auth-Key": API_TOKEN,
+        "X-Auth-Email": email,
+
     }
 
-    const response = await fetch(endpoint, init)
+    const response = await fetch(endpoint, { headers })
     const deployments = await response.json<Deployments>()
-    console.log(deployments)
+    if (!deployments.success) {
+        console.log(deployments)
+        throw new Error(deployments.errors[0].message)
+    }
 
     for (const deployment of deployments.result) {
         if ((Date.now() - new Date(deployment.created_on).getUTCSeconds()) / 86400000 > expirationDays) {
             await fetch(`${endpoint}/${deployment.id}`, {
                 method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json;charset=UTF-8",
-                    "Authorization": `Bearer ${env.API_TOKEN}`,
-                },
+                headers
             })
         }
     }
@@ -114,10 +118,14 @@ interface Result {
 }
 
 interface Deployments {
-    errors: any[]
+    errors: Error[]
     messages: any[]
     success: boolean
     result_info: ResultInfo
     result: Result[]
 }
 
+interface Error {
+    message: string
+    code: number
+}

@@ -7,5 +7,6 @@ interface Env {
 	API_TOKEN: string;
 	account_id: string;
 	project_name: string;
+	email: string;
 	elec: D1Database;
 }

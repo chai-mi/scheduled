@@ -146,7 +146,7 @@ async function work(env: Env, user: User) {
 
 export async function CronCheckElec(env: Env) {
     const users = await env.elec.prepare('SELECT * from user WHERE err = 0').all<User>()
-    await Promise.all(users.results
+    await Promise.allSettled(users.results
         .filter(users => users.err !== 1)
         .map(user => work(env, user))
     )
