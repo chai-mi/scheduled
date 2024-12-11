@@ -22,7 +22,7 @@ export default {
 				return
 			default:
 				// 测试用，例：
-				// await Hoyolab(env, ctx)
+				ctx.waitUntil(Hoyolab(env, ctx))
 				return
 		}
 	},
