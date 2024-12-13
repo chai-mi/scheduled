@@ -7,6 +7,9 @@ upload_source_maps = true
 [observability]
 enabled = true
 
+[placement]
+mode = "smart"
+
 [triggers]
 crons = ["0 0 * * *", "0 7/8 * * *"]
 
