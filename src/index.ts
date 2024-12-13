@@ -20,10 +20,6 @@ export default {
 			case '0 7/8 * * *':
 				await CronCheckElec(env)
 				return
-			default:
-				// 测试用，例：
-				ctx.waitUntil(Hoyolab(env, ctx))
-				return
 		}
 	},
 }
