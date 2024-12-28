@@ -1,6 +1,6 @@
 name = "scheduled"
 main = "src/index.ts"
-compatibility_date = "2024-12-13"
+compatibility_date = "2024-12-24"
 minify = true
 upload_source_maps = true
 
