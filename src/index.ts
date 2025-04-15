@@ -15,7 +15,7 @@ export default {
         switch (event.cron) {
             case "0 0 * * *":
                 ctx.waitUntil(Hoyolab(env, ctx))
-                ctx.waitUntil(DeleteOldDeployments(env, ctx))
+                // ctx.waitUntil(DeleteOldDeployments(env, ctx))
                 return
             case "0 7/8 * * *":
                 await CronCheckElec(env)
